@@ -1,38 +1,28 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
-class Resize extends Component {
-  constructor() {
-    super();
-    this.state = { width: 0, height: 0 };
+const Resize = () => {
+  const [ width, setWidth ] = useState(window.innerWidth);
+  const [ height, setHeight ] = useState(window.innerHeight);
+
+  const updateDimensions = () => {
+    setWidth(window.innerWidth);
+    setHeight(window.innerHeight);
   }
 
-  updateDimensions = () => {
-    this.setState({
-      width: window.innerWidth,
-      height: window.innerHeight
-    });
-  }
+  useEffect( () => {
+    window.addEventListener("resize", updateDimensions);
+    
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+    }
+  })
 
-  componentWillMount () {
-    this.updateDimensions();
-  }
-
-  componentDidMount () {
-    window.addEventListener("resize", this.updateDimensions);
-  }
-
-  componentWillUnmount () {
-    window.removeEventListener("resize", this.updateDimensions);
-  }
-
-  render () {
-    return (
-      <div>
-        <h2>Dimensions of the Current Windows</h2>
-        {`Width: ${this.state.width} | Height: ${this.state.height}`}
-      </div>
-    );
-  }
+  return (
+    <div>
+      <h2>Dimensions</h2>
+      {`Width: ${width} | Height: ${height}`}
+    </div>
+  )
 }
 
 export default Resize;
